@@ -1,4 +1,4 @@
-#
+ #
 #
 #           The Nim Compiler
 #        (c) Copyright 2013 Andreas Rumpf
@@ -1047,7 +1047,8 @@ proc typeRel(c: var TCandidate, f, aOrig: PType,
 
   if aOrig.kind in {tyAlias, tySink}:
     return typeRel(c, f, lastSon(aOrig), flags)
-
+  if isCompilerDebug():
+    echo a.kind
   if a.kind == tyGenericInst and
       skipTypes(f, {tyStatic, tyVar, tyLent, tySink}).kind notin {
         tyGenericBody, tyGenericInvocation,
