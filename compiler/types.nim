@@ -1312,6 +1312,9 @@ proc computeSize*(conf: ConfigRef; typ: PType): BiggestInt =
   computeSizeAlign(conf, typ)
   result = typ.size
 
+proc isIllegalRecursion*(conf: ConfigRef, typ: PType): bool =
+  computeSize(conf, t) == szIllegalRecursion or isTupleRecursive(t)
+
 proc getReturnType*(s: PSym): PType =
   # Obtains the return type of a iterator/proc/macro/template
   assert s.kind in skProcKinds
