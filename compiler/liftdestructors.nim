@@ -30,6 +30,7 @@ type
     canRaise: bool
     filterDiscriminator: PSym  # we generating destructor for case branch
     c: PContext # c can be nil, then we are called from lambdalifting!
+    typeDepth: int # Track how many times we have expanded a generic type
     idgen: IdGenerator
 
 template destructor*(t: PType): PSym = getAttachedOp(c.g, t, attachedDestructor)
@@ -215,6 +216,10 @@ proc fillBodyObjTImpl(c: var TLiftCtx; t: PType, body, x, y: PNode) =
   fillBodyObj(c, t.n, body, x, y, enforceDefaultOp = false)
 
 proc fillBodyObjT(c: var TLiftCtx; t: PType, body, x, y: PNode) =
+  if c.typeDepth >= 200:
+    localError(c.g.config, c.info, "illegal recursion in type '" & typeToString(t) & "'")
+  c.typeDepth += 1
+
   var hasCase = isCaseObj(t.n)
   var obj = t
   while obj.len > 0 and obj[0] != nil:

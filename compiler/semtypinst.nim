@@ -30,6 +30,9 @@ proc checkConstructedType*(conf: ConfigRef; info: TLineInfo, typ: PType) =
     localError(conf, info, "type 'var var' is not allowed")
   elif computeSize(conf, t) == szIllegalRecursion or isTupleRecursive(t):
     localError(conf, info, "illegal recursion in type '" & typeToString(t) & "'")
+  # if typeToString(t) == "Tree":
+    # echo "\n\n\n\n\n"
+  # echo computeSize(conf, t), " ", typeToString(t)
   when false:
     if t.kind == tyObject and t[0] != nil:
       if t[0].kind != tyObject or tfFinal in t[0].flags:
