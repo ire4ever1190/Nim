@@ -287,6 +287,9 @@
   related functions produced on the backend. This prevents conflicts with other Nim
   static libraries.
 
+- The switch `--sourceRoot:root` has been added which adds `root` as a prefix to any file in a js source map.
+  Also adds prefix to the location for the source map
+
 - When compiling for Release the flag `-fno-math-errno` is used for GCC.
 
 
