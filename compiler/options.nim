@@ -359,6 +359,7 @@ type
     lazyPaths*: seq[AbsoluteDir]
     outFile*: RelativeFile
     outDir*: AbsoluteDir
+    sourceRoot*: AbsoluteDir # Path to prefix all source map urls with
     jsonBuildFile*: AbsoluteFile
     prefixDir*, libpath*, nimcacheDir*: AbsoluteDir
     nimStdlibVersion*: NimVer
@@ -534,6 +535,7 @@ proc newConfigRef*(): ConfigRef =
     lazyPaths: @[],
     outFile: RelativeFile"",
     outDir: AbsoluteDir"",
+    sourceRoot: AbsoluteDir"", # Dir to prefix sourceMap urls with
     prefixDir: AbsoluteDir"",
     libpath: AbsoluteDir"", nimcacheDir: AbsoluteDir"",
     dllOverrides: newStringTable(modeCaseInsensitive),

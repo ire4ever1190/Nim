@@ -1,4 +1,5 @@
 import os, strformat, strutils, tables, sets, ropes, json, algorithm
+import options
 
 type
   SourceNode* = ref object
@@ -23,7 +24,7 @@ type
     names*:     seq[string]
     mappings*:  string
     file*:      string
-    # sourceRoot*: string
+    sourceRoot*: string
     # sourcesContent*: string
 
   SourceMapGenerator = ref object
@@ -283,7 +284,7 @@ proc serializeMappings(map: SourceMapGenerator, mappings: seq[Mapping]): string 
     result.add(next)
 
 
-proc gen*(map: SourceMapGenerator): SourceMap =
+proc gen*(map: SourceMapGenerator, conf: ConfigRef): SourceMap =
   var mappings = map.mappings.sorted do (a: Mapping, b: Mapping) -> int:
     cmp(a, b)
   result = SourceMap(
@@ -291,7 +292,9 @@ proc gen*(map: SourceMapGenerator): SourceMap =
     version: 3,
     sources: map.sources[0..^1],
     names: map.names[0..^1],
-    mappings: map.serializeMappings(mappings))
+    mappings: map.serializeMappings(mappings),
+    sourceRoot: conf.sourceRoot.string
+  )
 
 
 
@@ -376,8 +379,8 @@ proc toSourceMap*(node: SourceNode, file: string): SourceMapGenerator =
   map
 
 
-proc genSourceMap*(source: string, outFile: string): (Rope, SourceMap) =
+proc genSourceMap*(conf: ConfigRef, source: string, outFile: string): (Rope, SourceMap) =
   let node = parse(source, outFile)
-  let map = node.toSourceMap(file = outFile)
-  ((&"{source}\n//# sourceMappingURL={outFile}.map").rope, map.gen)
+  let map = node.toSourceMap(file = outFile).gen(conf)
+  ((&"{source}\n//# sourceMappingURL={map.sourceRoot / outFile}.map").rope, map)
 

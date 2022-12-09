@@ -2885,7 +2885,7 @@ proc myClose(graph: ModuleGraph; b: PPassContext, n: PNode): PNode =
     # Generate an optional source map.
     if optSourcemap in m.config.globalOptions:
       var map: SourceMap
-      (code, map) = genSourceMap($(code), outFile.string)
+      (code, map) = genSourceMap(m.config, $(code), outFile.string)
       writeFile(outFile.string & ".map", $(%map))
     # Check if the generated JS code matches the output file, or else
     # write it to the file.
