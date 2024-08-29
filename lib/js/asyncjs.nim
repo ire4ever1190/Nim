@@ -70,6 +70,7 @@ when not defined(js) and not defined(nimsuggest):
 import std/jsffi
 import std/macros
 import std/private/since
+import std/sequtils
 
 type
   Future*[T] = ref object
@@ -124,6 +125,9 @@ proc generateJsasync(arg: NimNode): NimNode =
     isVoid = true
 
   var code = result.body
+  # Initialise the result
+  if not (isVoid or code.params.anyIt(it.eqIdent("noinit"))):
+    code &= nnkAsgn.newTree(ident"result", newCall(ident"default", arg.params[0]))
   replaceReturn(code)
   result.body = nnkStmtList.newTree()
 
