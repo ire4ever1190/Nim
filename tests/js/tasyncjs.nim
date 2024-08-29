@@ -10,7 +10,7 @@ done
 xxx move this to tests/stdlib/tasyncjs.nim
 ]#
 
-import std/asyncjs
+import std/[asyncjs, options]
 
 block:
   # demonstrate forward definition for js
@@ -92,6 +92,12 @@ proc main() {.async.} =
     doAssert reason != nil
     doAssert reason.name == "Error"
     doAssert "foobar: 7" in $reason.message
+
+  block:
+    proc test(): Future[Option[int]] {.async.} =
+      discard
+    doAssert test().await().isNone()
+
   echo "done" # justified here to make sure we're running this, since it's inside `async`
 
 block asyncPragmaInType:
