@@ -526,7 +526,7 @@ proc semObjConstr(c: PContext, n: PNode, flags: TExprFlags; expectedType: PType 
           break
       # 2) No such field exists in the constructed type
       let msg = errUndeclaredField % id.s & " for type " & getProcHeader(c.config, t.sym)
-      localError(c.config, field.info, msg)
+      localError(c.config, field[0].info, msg)
       hasError = true
       break
 
