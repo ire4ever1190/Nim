@@ -73,8 +73,10 @@ proc checkModuleName*(conf: ConfigRef; n: PNode; doLocalError=true): FileIndex =
   let fullPath = findModule(conf, modulename, toFullPath(conf, n.info))
   if fullPath.isEmpty:
     if doLocalError:
-      let m = if modulename.len > 0: modulename else: $n
-      localError(conf, n.info, "cannot open file: " & m)
+      let
+        moduleIdent = if n.kind in {nkInfix, nkImportAs, nkPrefix}: n[^1] else: n
+        m = if modulename.len > 0: modulename else: $n
+      localError(conf, moduleIdent.info, "cannot open file: " & m)
     result = InvalidFileIdx
   else:
     result = fileInfoIdx(conf, fullPath)
