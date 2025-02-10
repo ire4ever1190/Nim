@@ -795,7 +795,9 @@ proc procTypeRel(c: var TCandidate, f, a: PType): TTypeRelation =
       return isNone
 
     template checkParam(f, a) =
-      result = minRel(result, procParamTypeRel(c, f, a))
+      # if `a` is nil then its void, use an actual type so generic matching works
+      let typA = if a != nil: a else: newTypeS(tyVoid, c.c)
+      result = minRel(result, procParamTypeRel(c, f, typA))
       if result == isNone: return
 
     # Note: We have to do unification for the parameters before the
@@ -804,10 +806,7 @@ proc procTypeRel(c: var TCandidate, f, a: PType): TTypeRelation =
       checkParam(f[i], a[i])
 
     if f[0] != nil:
-      if a[0] != nil:
-        checkParam(f[0], a[0])
-      else:
-        return isNone
+      checkParam(f[0], a[0])
     elif a[0] != nil:
       return isNone
 
