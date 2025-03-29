@@ -695,4 +695,4 @@ def new_object_handler(event):
 
 gdb.events.new_objfile.connect(new_object_handler)
 
-gdb.frame_filters = {"nim-frame-filter": NimFrameFilter()}
+gdb.frame_filters["nim-frame-filter"] = NimFrameFilter()
